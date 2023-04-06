@@ -1,0 +1,16 @@
+name: 'Get bump label'
+description: 'Gets the bump type from a PR label'
+inputs:
+  label_prefix:
+    description: 'prefix of label to get i.e <label_prefix>:<label_value>'
+    required: false
+    default: 'bump'
+  github_token:
+    description: 'github token used to obtain labels on non-pull request events'
+    required: false
+outputs:
+  label_value:
+    description: 'the value of the get label'
+runs:
+  using: 'node16'
+  main: 'dist/index.js
