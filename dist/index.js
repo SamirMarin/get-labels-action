@@ -9868,7 +9868,7 @@ function setKeyLabel(labelNames) {
     }
 
     if (outputValue === '') {
-        if (keyedValues.length() > 0) {
+        if (keyedValues.length > 0) {
             outputValue = keyedValues.sort()[0]
         } else {
             outputValue = core.getInput('default_label_value')
