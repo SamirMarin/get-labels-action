@@ -1,18 +1,19 @@
-const github = require("@actions/github");
-const core = require("@actions/core");
+const { github } = require("@actions/github");
+const { core } = require("@actions/core");
 const { Octokit } = require("@octokit/core");
-const {error} = require("@actions/core");
 
 export async function processTrigger() {
     let labels
     if (github.context.eventName === 'pull_request'){
         labels = github.context.payload?.pull_request?.labels
     } else {
-        console.log('getting push event label');
         labels = await getPushEventLabels()
     }
+    if (labels.labels === 0) {
+        return labels
+    }
 
-    return labels
+    return labels.map(label => label.name )
 }
 
 async function getPushEventLabels() {
@@ -35,7 +36,5 @@ async function getPushEventLabels() {
             'X-GitHub-Api-Version': '2022-11-28'
         }
     })
-    console.log('this is the pull');
-    console.log(pulls.data[0]);
     return pulls.data[0].labels
 }
