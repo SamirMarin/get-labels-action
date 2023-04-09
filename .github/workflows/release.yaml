@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - get-bump-label
 
   pull_request:
     branches:
