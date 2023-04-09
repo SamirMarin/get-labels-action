@@ -1,16 +1,13 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+import {processTrigger} from "./src/action";
 
 async function run() {
     try {
         const labelPrefix = core.getInput('label_prefix');
-        const time = (new Date()).toTimeString();
-        core.setOutput("label_value", time);
-        // Get the JSON webhook payload for the event that triggered the workflow
-        const payload = JSON.stringify(github.context.payload, undefined, 2)
-        console.log(`The event payload: ${payload}`);
-
-        core.setOutput('time', new Date().toTimeString());
+        const labels = processTrigger()
+        core.setOutput("label_value", labels);
+        console.log(`the labels are ${labels}`);
     } catch (error) {
         core.setFailed(error.message);
     }

@@ -9781,29 +9781,85 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
-const core = __nccwpck_require__(2508);
-const github = __nccwpck_require__(5812);
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
 
-try {
-    // `who-to-greet` input defined in action metadata file
-    const labelPrefix = core.getInput('label_prefix');
-    console.log(`Hello ${labelPrefix}!`);
-    const time = (new Date()).toTimeString();
-    core.setOutput("label_value", time);
-    // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
-} catch (error) {
-    core.setFailed(error.message);
+;// CONCATENATED MODULE: ./src/action.js
+const github = __nccwpck_require__(5812);
+const core = __nccwpck_require__(2508);
+const { Octokit } = __nccwpck_require__(3990);
+const {error} = __nccwpck_require__(2508);
+
+async function processTrigger() {
+    let labels
+    if (github.context.eventName === 'pull_request'){
+        labels = github.context.payload?.pull_request?.labels
+    } else {
+        labels = await getPushEventLabels()
+    }
+
+    return labels
 }
+
+async function getPushEventLabels() {
+    const github_token = core.getInput('github_token');
+    if (github_token === '') {
+        core.error("github_token required for push events")
+        return
+    }
+    // Octokit.js
+    // https://github.com/octokit/core.js#readme
+    const octokit = new Octokit({
+        auth: github_token
+    })
+
+    const pull_request = await octokit.request('GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls', {
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        commit_sha: github.context.sha,
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    })
+    return pull_request[0].labels
+}
+;// CONCATENATED MODULE: ./index.js
+const index_core = __nccwpck_require__(2508);
+const index_github = __nccwpck_require__(5812);
+
+
+async function run() {
+    try {
+        const labelPrefix = index_core.getInput('label_prefix');
+        const labels = processTrigger()
+        index_core.setOutput("label_value", labels);
+        console.log(`the labels are ${labels}`);
+    } catch (error) {
+        index_core.setFailed(error.message);
+    }
+}
+
+run();
 })();
 
 module.exports = __webpack_exports__;
