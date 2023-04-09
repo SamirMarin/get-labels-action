@@ -9861,7 +9861,7 @@ function setKeyLabel(labelNames) {
     const valueOrderArray = valueOrder.split(',')
     let outputValue = ''
     for (let value of valueOrderArray) {
-        if (keyedValues.contains(value)) {
+        if (keyedValues.includes(value)) {
             outputValue = value
             break;
         }
