@@ -8,6 +8,7 @@ export async function processTrigger() {
     if (github.context.eventName === 'pull_request'){
         labels = github.context.payload?.pull_request?.labels
     } else {
+        console.log('getting push event label');
         labels = await getPushEventLabels()
     }
 
@@ -34,5 +35,7 @@ async function getPushEventLabels() {
             'X-GitHub-Api-Version': '2022-11-28'
         }
     })
+    console.log('this is the pull');
+    console.log(pull_request);
     return pull_request[0].labels
 }
