@@ -27,7 +27,7 @@ async function getPushEventLabels() {
         auth: github_token
     })
 
-    const pull_request = await octokit.request('GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls', {
+    const pulls = await octokit.request('GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls', {
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         commit_sha: github.context.sha,
@@ -36,6 +36,6 @@ async function getPushEventLabels() {
         }
     })
     console.log('this is the pull');
-    console.log(pull_request);
-    return pull_request[0].labels
+    console.log(pulls);
+    return pulls.data[0].labels
 }
