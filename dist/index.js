@@ -9851,7 +9851,7 @@ const index_github = __nccwpck_require__(5812);
 async function run() {
     try {
         const labelPrefix = index_core.getInput('label_prefix');
-        const labels = processTrigger()
+        const labels = await processTrigger()
         index_core.setOutput("label_value", labels);
         console.log(`the labels are ${labels}`);
     } catch (error) {

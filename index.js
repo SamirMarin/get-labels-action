@@ -5,7 +5,7 @@ import {processTrigger} from "./src/action";
 async function run() {
     try {
         const labelPrefix = core.getInput('label_prefix');
-        const labels = processTrigger()
+        const labels = await processTrigger()
         core.setOutput("label_value", labels);
         console.log(`the labels are ${labels}`);
     } catch (error) {
