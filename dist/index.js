@@ -9805,8 +9805,8 @@ var __webpack_exports__ = {};
 __nccwpck_require__.r(__webpack_exports__);
 
 ;// CONCATENATED MODULE: ./src/action.js
-const { github } = __nccwpck_require__(5812);
-const { core } = __nccwpck_require__(2508);
+const github  = __nccwpck_require__(5812);
+const core = __nccwpck_require__(2508);
 const { Octokit } = __nccwpck_require__(3990);
 
 async function processTrigger() {
