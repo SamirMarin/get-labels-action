@@ -36,6 +36,6 @@ async function getPushEventLabels() {
         }
     })
     console.log('this is the pull');
-    console.log(pulls);
+    console.log(pulls.data[0]);
     return pulls.data[0].labels
 }
