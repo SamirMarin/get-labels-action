@@ -13,7 +13,9 @@ export async function processTrigger() {
         return labels
     }
 
-    return labels.map(label => label.name )
+    const labelNames = labels.map(label => label.name )
+    core.setOutput("labels", labelNames);
+    setKeyLabel(labelNames)
 }
 
 async function getPushEventLabels() {
@@ -37,4 +39,34 @@ async function getPushEventLabels() {
         }
     })
     return pulls.data[0].labels
+}
+
+function setKeyLabel(labelNames) {
+
+    const labelKey = core.getInput('label_key');
+    const keyedValues = labelNames.filter(
+        labelName => labelName.startsWith(labelKey+":")
+    ).map(
+        keyedLabel => keyedLabel.substring(labelKey.length+1, keyedLabel.length)
+    )
+
+    const valueOrder = core.getInput('label_value_order')
+    const valueOrderArray = valueOrder.split(',')
+    let outputValue = ''
+    for (let value of valueOrderArray) {
+        if (keyedValues.contains(value)) {
+            outputValue = value
+            break;
+        }
+    }
+
+    if (outputValue === '') {
+        if (keyedValues.length() > 0) {
+            outputValue = keyedValues.sort()[0]
+        } else {
+            outputValue = core.getInput('default_label_value')
+        }
+    }
+
+    core.setOutput("label_value", outputValue);
 }

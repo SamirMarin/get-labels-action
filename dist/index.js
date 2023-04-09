@@ -9820,7 +9820,9 @@ async function processTrigger() {
         return labels
     }
 
-    return labels.map(label => label.name )
+    const labelNames = labels.map(label => label.name )
+    core.setOutput("labels", labelNames);
+    setKeyLabel(labelNames)
 }
 
 async function getPushEventLabels() {
@@ -9845,6 +9847,36 @@ async function getPushEventLabels() {
     })
     return pulls.data[0].labels
 }
+
+function setKeyLabel(labelNames) {
+
+    const labelKey = core.getInput('label_key');
+    const keyedValues = labelNames.filter(
+        labelName => labelName.startsWith(labelKey+":")
+    ).map(
+        keyedLabel => keyedLabel.substring(labelKey.length+1, keyedLabel.length)
+    )
+
+    const valueOrder = core.getInput('label_value_order')
+    const valueOrderArray = valueOrder.split(',')
+    let outputValue = ''
+    for (let value of valueOrderArray) {
+        if (keyedValues.contains(value)) {
+            outputValue = value
+            break;
+        }
+    }
+
+    if (outputValue === '') {
+        if (keyedValues.length() > 0) {
+            outputValue = keyedValues.sort()[0]
+        } else {
+            outputValue = core.getInput('default_label_value')
+        }
+    }
+
+    core.setOutput("label_value", outputValue);
+}
 ;// CONCATENATED MODULE: ./index.js
 const index_core = __nccwpck_require__(2508);
 const index_github = __nccwpck_require__(5812);
@@ -9852,10 +9884,7 @@ const index_github = __nccwpck_require__(5812);
 
 async function run() {
     try {
-        const labelPrefix = index_core.getInput('label_prefix');
         const labels = await processTrigger()
-        index_core.setOutput("label_value", labels);
-        console.log(`the labels are ${labels}`);
     } catch (error) {
         index_core.setFailed(error.message);
     }
