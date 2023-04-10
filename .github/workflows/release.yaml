@@ -20,7 +20,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: bump
-          label_value_order: "patch,minor"
+          label_value_order: "patch,minor,major,ignore"
+          default_label_value: patch
       - name: echo-test
         run: |
           echo ${{ steps.bump-label.outputs.labels }}
