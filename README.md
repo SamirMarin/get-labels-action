@@ -55,7 +55,7 @@ The labels on the pr seperated by a comma. If labels are ["hello", "now", "new:n
 ```yaml
 - name: Get bump version
   id: bump_label
-  uses: SamirMarin/get-labels-action@v0.0.1
+  uses: SamirMarin/get-labels-action@v0
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     label_key: bump
@@ -64,7 +64,7 @@ The labels on the pr seperated by a comma. If labels are ["hello", "now", "new:n
 
 - name: Get tag prefix
   id: tag_prefix
-  uses: SamirMarin/get-labels-action@v0.0.1
+  uses: SamirMarin/get-labels-action@v0
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     label_key: version

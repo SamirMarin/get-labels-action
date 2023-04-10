@@ -1,5 +1,5 @@
-name: 'Get labels'
-description: 'Gets PR labels'
+name: 'Get labels action by key'
+description: 'Gets PR label by a specified key'
 inputs:
   label_key:
     description: 'the key of a keyed label i.e <label_key>:<label_value>'
