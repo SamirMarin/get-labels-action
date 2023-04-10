@@ -1,0 +1,28 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+      - get-bump-label
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: bump_labels
+        id: bump-label
+        uses: SamirMarin/get-bump-label-action@get-bump-label
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          label_key: bump
+          label_value_order: "patch,minor,major,ignore"
+          default_label_value: patch
+      - name: echo-test
+        run: |
+          echo ${{ steps.bump-label.outputs.labels }}
+          echo ${{ steps.bump-label.outputs.label_value }}

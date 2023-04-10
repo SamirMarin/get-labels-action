@@ -1,0 +1,24 @@
+{
+  "name": "get-bump-label-action",
+  "version": "1.0.0",
+  "description": "Github action to get the version bump type from a label",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamirMarin/get-bump-label-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamirMarin/get-bump-label-action/issues"
+  },
+  "homepage": "https://github.com/SamirMarin/get-bump-label-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1"
+  }
+}

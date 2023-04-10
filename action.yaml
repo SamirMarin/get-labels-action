@@ -1,0 +1,26 @@
+name: 'Get labels'
+description: 'Gets PR labels'
+inputs:
+  label_key:
+    description: 'the key of a keyed label i.e <label_key>:<label_value>'
+    required: false
+    default: ''
+  default_label_value:
+    description: 'the default value if key does not match any label'
+    required: false
+    default: ''
+  label_value_order:
+    description: 'order of preference if multiple keyed labels found'
+    required: false
+    default: ''
+  github_token:
+    description: 'github token used to obtain labels on non-pull request events'
+    required: false
+outputs:
+  label_value:
+    description: 'the value of the keyed label'
+  labels:
+    description: 'list of all pr labels, seperated by a comma'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
