@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - get-bump-label
 
   pull_request:
     branches:
@@ -14,15 +13,67 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: bump_labels
-        id: bump-label
-        uses: SamirMarin/get-bump-label-action@get-bump-label
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Get PR Info
+        id: pr
+        uses: jwalton/gh-find-current-pr@v1
+        with:
+          state: all
+
+      - name: Get bump version
+        id: bump_label
+        uses: SamirMarin/get-bump-label-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: bump
           label_value_order: "patch,minor,major,ignore"
           default_label_value: patch
-      - name: echo-test
+
+      - name: Get tag prefix
+        id: tag_prefix
+        uses: SamirMarin/get-bump-label-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          label_key: version
+          default_label_value: v
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: ${{ steps.bump_label.outputs.label_value }}
+          dry_run: ${{ github.event_name == 'pull_request' }}
+          tag_prefix: ${{ steps.tag_prefix.outputs.label_value }}
+
+      - name: Create major version tag value
+        id: major_tag_version
         run: |
-          echo ${{ steps.bump-label.outputs.labels }}
-          echo ${{ steps.bump-label.outputs.label_value }}
+          major_version=$(echo ${{ steps.tag_version.outputs.new_tag }} | cut -d "." -f 1)
+          echo "value=${major_version}" >> $GITHUB_OUTPUT
+
+      - name: Override or push major tag
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ steps.major_tag_version.outputs.value }}
+          force_push_tag: true
+
+      - name: Comment on PR
+        if: ${{ github.event_name == 'pull_request' && steps.tag_version.outputs.new_tag != '' }}
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **The current major Release:** 🚀 ${{ steps.major_tag_version.outputs.value }}
+            **Next Release:** 🚀 ${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        if: ${{ github.event_name != 'pull_request' && steps.tag_version.outputs.new_tag != '' }}
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
