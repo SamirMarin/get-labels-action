@@ -66,6 +66,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           body: |
             **The current major Release:** 🚀 ${{ steps.major_tag_version.outputs.value }}
             **Next Release:** 🚀 ${{ steps.tag_version.outputs.new_tag }}
