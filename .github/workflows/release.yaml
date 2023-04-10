@@ -19,6 +19,7 @@ jobs:
         uses: SamirMarin/get-bump-label-action@get-bump-label
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          label_key: bump
       - name: echo-test
         run: |
           echo ${{ steps.bump-label.outputs.labels }}
