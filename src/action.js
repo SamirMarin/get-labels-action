@@ -13,9 +13,7 @@ export async function processTrigger() {
         return labels
     }
 
-    const labelNames = labels.map(label => label.name )
-    core.setOutput("labels", labelNames.join(','));
-    setKeyLabel(labelNames)
+    setOutputs(labels)
 }
 
 async function getPushEventLabels() {
@@ -41,7 +39,9 @@ async function getPushEventLabels() {
     return pulls.data[0].labels
 }
 
-function setKeyLabel(labelNames) {
+function setOutputs(labels) {
+    const labelNames = labels.map(label => label.name )
+    core.setOutput("labels", labelNames.join(','));
 
     const labelKey = core.getInput('label_key');
     const keyedValues = labelNames.filter(
@@ -69,4 +69,5 @@ function setKeyLabel(labelNames) {
     }
 
     core.setOutput("label_value", outputValue);
+    return outputValue
 }
