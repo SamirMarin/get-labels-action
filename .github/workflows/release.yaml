@@ -24,7 +24,7 @@ jobs:
 
       - name: Get bump version
         id: bump_label
-        uses: SamirMarin/get-bump-label-action@main
+        uses: SamirMarin/get-labels-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: bump
@@ -33,7 +33,7 @@ jobs:
 
       - name: Get tag prefix
         id: tag_prefix
-        uses: SamirMarin/get-bump-label-action@main
+        uses: SamirMarin/get-labels-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: version
