@@ -14,7 +14,7 @@ export async function processTrigger() {
     }
 
     const labelNames = labels.map(label => label.name )
-    core.setOutput("labels", labelNames);
+    core.setOutput("labels", labelNames.join(','));
     setKeyLabel(labelNames)
 }
 
