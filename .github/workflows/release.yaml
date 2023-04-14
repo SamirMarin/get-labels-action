@@ -2,10 +2,16 @@ name: release
 
 on:
   push:
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
     branches:
       - main
 
   pull_request:
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
     branches:
       - main
 
