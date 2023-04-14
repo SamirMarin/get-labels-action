@@ -1,54 +1,73 @@
 # get-labels-action
-This Github action gets pr labels
-1. Gets the list of labels on pr
-- - if labels on PR are ["bug", "issue", "version:beta", "bump:patch"]
->>outputs labels > "bug,issue,version:beta,bump:patch"
+This Github action gets a label by key and pr labels
+1. Gets keyed label on pr
+- - if specified label_key is `bump` and labels on PR are `["bug", "issue", "version:beta", "bump:patch"]`
+- - - outputs `label_value`=`"patch"`
 
-2. Gets keyed label on pr
-- - if specified label_key is `bump` and labels on PR are ["bug", "issue", "version:beta", "bump:patch"]
->>outputs label_value > "patch"
+2. Gets the list of labels on pr
+- - if labels on PR are `["bug", "issue", "version:beta", "bump:patch"]`
+- - - outputs `labels`=`"bug,issue,version:beta,bump:patch"`
 
 ## Inputs
 
 ### `label_key`
-The key used to get the label value, i.e `<label_key>:<label_value>`
+The key used to get the label_value by key, i.e `<label_key>:<label_value>`
 
-example => "bump"
+```
+example:
 
-defaults to ''
+`label_key` => "bump" for a label=`bump:patch`
+
+label_key defaults to ""
+```
 
 ### `default_label_value`
 When no label with the label key is specified the default label_value to output
 
-example => "patch"
+```
+example:
 
-defaults to ''
+`default_label_value` => "patch"
+
+defaults to ""
+
+```
 
 ### `label_value_order`
-Order of precedence for label_values, for example if the label_key is `bump` 
+Order of precedence for label_values, 
+```
+example 
+
+if the label_key is `bump` 
 
 and multiple labels appear in the pr with key bump i.e `["bump:patch", "bump:minor", "bump:major"]`
 
-and the label_value_order is `"patch,minor,major"` the patch value would take precedence and be outputted.
+and the label_value_order is `"patch,minor,major"` the patch value would take precedence and be outputted over the other two.
 
-example => "patch,minor,major"
+defaults to ""
+```
 
-defaults to ''
 
 ### `github_token`
 The token used to get labels for non pull_request events, i.e push events
 
 not needed if labels are only needed for pull_request events
 
-example => ${{ secrets.GITHUB_TOKEN }}
+```
+example
+
+${{ secrets.GITHUB_TOKEN }}
+ 
+defaults ""
+```
 
 ## Outputs
 
 ### `label_value`
-The label value output. If key is bump and label is bump:patch the `label_value=patch`
+The label value output. If key is bump and label is `bump:patch` the `label_value=patch`
 
 ### `labels`
-The labels on the pr seperated by a comma. If labels are ["hello", "now", "new:now"] the labels="hello,now,new:now"
+The labels on the pr seperated by a comma. If labels are `["hello", "now", "new:now"]` the `labels="hello,now,new:now"`
 
 ## Example usage
 
