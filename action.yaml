@@ -1,3 +1,4 @@
+# The Action definition
 name: 'Get labels action by key'
 description: 'Gets PR label by a specified key'
 inputs:
