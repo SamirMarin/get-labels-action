@@ -22,15 +22,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Get PR Info
-        id: pr
-        uses: jwalton/gh-find-current-pr@v1
-        with:
-          state: all
-
       - name: Get bump version
         id: bump_label
-        uses: SamirMarin/get-labels-action@main
+        uses: SamirMarin/get-labels-action@v0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: bump
@@ -39,7 +33,7 @@ jobs:
 
       - name: Get tag prefix
         id: tag_prefix
-        uses: SamirMarin/get-labels-action@main
+        uses: SamirMarin/get-labels-action@v0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: version
