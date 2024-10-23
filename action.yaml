@@ -22,5 +22,5 @@ outputs:
   labels:
     description: 'list of all pr labels, seperated by a comma'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
