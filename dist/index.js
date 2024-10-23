@@ -9758,10 +9758,7 @@ function setOutputs(labels) {
             break;
         }
     }
-    core.info(`Current outputValue: "${outputValue}"`);
-    console.log(`Current outputValue: "${outputValue}"`);
     if (!outputValue) {
-        core.info("the label value is empty we are here to set it");
         outputValue = keyedValues.length > 0 ? keyedValues.sort()[0] : core.getInput('default_label_value');
     }
     core.setOutput("label_value", outputValue);
