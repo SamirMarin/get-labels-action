@@ -61,6 +61,8 @@ function setOutputs(labels: { name: string }[]) {
     }
 
     if (!outputValue) {
+        core.info("the label value is empty we are here to set it")
+
         outputValue = keyedValues.length > 0 ? keyedValues.sort()[0] : core.getInput('default_label_value');
     }
 
