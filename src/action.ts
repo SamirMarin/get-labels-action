@@ -60,6 +60,7 @@ function setOutputs(labels: { name: string }[]) {
         }
     }
     core.info(`Current outputValue: "${outputValue}"`);
+    console.log(`Current outputValue: "${outputValue}"`);
 
     if (!outputValue) {
         core.info("the label value is empty we are here to set it")
