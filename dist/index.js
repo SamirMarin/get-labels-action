@@ -9721,9 +9721,6 @@ function processTrigger() {
         else {
             labels = yield getPushEventLabels();
         }
-        if (labels.length === 0) {
-            return labels;
-        }
         setOutputs(labels);
     });
 }

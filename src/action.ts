@@ -10,10 +10,6 @@ export async function processTrigger() {
         labels = await getPushEventLabels();
     }
 
-    if (labels.length === 0) {
-        return labels;
-    }
-
     setOutputs(labels);
 }
 
