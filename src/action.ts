@@ -59,6 +59,7 @@ function setOutputs(labels: { name: string }[]) {
             break;
         }
     }
+    core.info(`Current outputValue: "${outputValue}"`);
 
     if (!outputValue) {
         core.info("the label value is empty we are here to set it")
