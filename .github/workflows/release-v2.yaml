@@ -25,6 +25,7 @@ jobs:
           label_value_order: 'patch,minor,major'
           default_label_value: patch
 
+      # step to push tag
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
