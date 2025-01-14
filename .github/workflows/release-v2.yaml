@@ -39,7 +39,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue_number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             **Next Release:** ${{ steps.tag_version.outputs.new_tag }}
 
