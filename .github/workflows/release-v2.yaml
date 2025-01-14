@@ -35,6 +35,14 @@ jobs:
           dry_run: ${{ github.event_name == 'pull_request' }}
           tag_prefix: 'v'
 
+      - name: Comment version on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue_number: ${{ github.event.pull_request.number }}
+          body: |
+            **Next Release:** ${{ steps.tag_version.output.new_tag }}
+
       - name: Create Release
         if: ${{ github.event_name != 'pull_request' }}
         uses: ncipollo/release-action@v1
