@@ -13,22 +13,29 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    
-    #create a github Release
-    #create a tag --> main
       - name: Checkout out code into runner
         uses: actions/checkout@v4
+
+      - name: Get bump type
+        id: bump_label
+        uses: SamirMarin/get-labels-action@release-workflow-v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          label_key: bump
+          label_value_order: 'patch,minor,major'
+          defult_label_value: patch
 
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          default_bump: # v0.0.1 --> v0.1.0 patch, minor, major
+          default_bump: ${{ steps.bump_label.outputs.label_value }}
           dry_run: ${{ github.event_name == 'pull_request' }}
           tag_prefix: 'v'
 
       - name: Create Release
+        if: ${{ github.event_name != 'pull_request' }}
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
