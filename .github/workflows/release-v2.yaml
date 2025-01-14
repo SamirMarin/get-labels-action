@@ -41,7 +41,7 @@ jobs:
         with:
           issue_number: ${{ github.event.pull_request.number }}
           body: |
-            **Next Release:** ${{ steps.tag_version.output.new_tag }}
+            **Next Release:** ${{ steps.tag_version.outputs.new_tag }}
 
       - name: Create Release
         if: ${{ github.event_name != 'pull_request' }}
