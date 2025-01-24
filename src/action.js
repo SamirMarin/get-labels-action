@@ -16,6 +16,7 @@ export async function processTrigger() {
     setOutputs(labels)
 }
 
+// new release example
 async function getPushEventLabels() {
     const github_token = core.getInput('github_token');
     if (github_token === '') {
