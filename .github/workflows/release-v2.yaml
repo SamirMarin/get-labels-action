@@ -18,7 +18,7 @@ jobs:
 
       - name: Get bump type
         id: bump_label
-        uses: SamirMarin/get-labels-action@release-workflow-v2
+        uses: SamirMarin/get-labels-action@release-workflow-v2 #v0.1.0, #v0.2.0 v0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           label_key: bump
@@ -35,12 +35,27 @@ jobs:
           dry_run: ${{ github.event_name == 'pull_request' }}
           tag_prefix: 'v'
 
+      - name: Create major version tag value
+        id: major_tag_version
+        run: |
+          major_version=$(echo ${{ step.tag_version.outputs.new_tag }} | cut -d "." -f 1 )
+          echo "value=${major_version}" >> $GITHUB_OUTPUT     
+
+      - name: Override or push major tag
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ steps.major_tag_version.outputs.value }}
+          force_puth_tag: true
+        
+
       - name: Comment version on PR
         if: ${{ github.event_name == 'pull_request' }}
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
+            **The next or current major Release:** ${{ steps.major_tag_version.outputs.value }}
             **Next Release:** ${{ steps.tag_version.outputs.new_tag }}
 
       - name: Create Release
