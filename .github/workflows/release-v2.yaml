@@ -38,7 +38,7 @@ jobs:
       - name: Create major version tag value
         id: major_tag_version
         run: |
-          major_version=$(echo ${{ step.tag_version.outputs.new_tag }} | cut -d "." -f 1 )
+          major_version=$(echo ${{ steps.tag_version.outputs.new_tag }} | cut -d "." -f 1 )
           echo "value=${major_version}" >> $GITHUB_OUTPUT     
 
       - name: Override or push major tag
