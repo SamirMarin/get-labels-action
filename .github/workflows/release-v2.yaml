@@ -1,0 +1,67 @@
+name: release v2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout out code into runner
+        uses: actions/checkout@v4
+
+      - name: Get bump type
+        id: bump_label
+        uses: SamirMarin/get-labels-action@release-workflow-v2 #v0.1.0, #v0.2.0 v0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          label_key: bump
+          label_value_order: 'patch,minor,major'
+          default_label_value: patch
+
+      # step to push tag
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: ${{ steps.bump_label.outputs.label_value }}
+          dry_run: ${{ github.event_name == 'pull_request' }}
+          tag_prefix: 'v'
+
+      - name: Create major version tag value
+        id: major_tag_version
+        run: |
+          major_version=$(echo ${{ steps.tag_version.outputs.new_tag }} | cut -d "." -f 1 )
+          echo "value=${major_version}" >> $GITHUB_OUTPUT     
+
+      - name: Override or push major tag
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ steps.major_tag_version.outputs.value }}
+          force_puth_tag: true
+        
+
+      - name: Comment version on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **The next or current major Release:** ${{ steps.major_tag_version.outputs.value }}
+            **Next Release:** ${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Create Release
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
